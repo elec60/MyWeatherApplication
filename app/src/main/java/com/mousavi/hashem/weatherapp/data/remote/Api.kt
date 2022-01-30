@@ -15,8 +15,8 @@ interface Api {
 
     @GET("search/")
     suspend fun getLocationData(
-        @Query("search") name: String,
-    ): LocationDataDto
+        @Query("query") name: String,
+    ): List<LocationDataDto>
 
     @GET("{woeid}/{year}/{month}/{day}/")
     suspend fun getWeatherDataByDate(
