@@ -48,6 +48,10 @@ class MainFragment : BaseFragment(), SharedPreferences.OnSharedPreferenceChangeL
             findNavController().navigate(R.id.action_mainFragment_to_citiesFragment)
         }
 
+        binding.tvCityName.setOnClickListener{
+            findNavController().navigate(R.id.action_mainFragment_to_citiesFragment)
+        }
+
     }
 
     private fun observers() {
