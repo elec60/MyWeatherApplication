@@ -1,5 +1,6 @@
 package com.mousavi.hashem.weatherapp.presentation.city
 
+import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -47,6 +48,14 @@ class CitiesFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.recycler.adapter = adapter
         observers()
+        startAnimation()
+    }
+
+    private fun startAnimation() {
+        val animator = ObjectAnimator.ofFloat(binding.recycler, "translationX", -50f, 0f).apply {
+            duration = 500L
+        }
+        animator.start()
     }
 
     private fun observers() {

@@ -10,7 +10,11 @@
         android:label="MainFragment" >
         <action
             android:id="@+id/action_mainFragment_to_citiesFragment"
-            app:destination="@id/citiesFragment" />
+            app:destination="@id/citiesFragment"
+            app:enterAnim="@anim/slide_enter"
+            app:exitAnim="@anim/fix"
+            app:popEnterAnim="@anim/fix"
+            app:popExitAnim="@anim/slide_pop_exit" />
     </fragment>
     <fragment
         android:id="@+id/citiesFragment"
