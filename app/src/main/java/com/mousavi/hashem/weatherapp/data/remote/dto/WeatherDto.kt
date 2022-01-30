@@ -4,6 +4,7 @@ package com.mousavi.hashem.weatherapp.data.remote.dto
 import com.google.gson.annotations.SerializedName
 import com.mousavi.hashem.weatherapp.data.remote.Api.Companion.IMAGE_BASE_URL
 import com.mousavi.hashem.weatherapp.domain.entity.Weather
+import kotlin.math.roundToInt
 
 data class WeatherDto(
     @SerializedName("air_pressure")
@@ -42,9 +43,9 @@ data class WeatherDto(
             id = id,
             applicableDate = applicableDate,
             created = created,
-            maxTemp = "$maxTemp°C",
-            minTemp = "$minTemp°C",
-            theTemp = theTemp.toString(),
+            maxTemp = "${maxTemp.roundToInt()}°C",
+            minTemp = "${minTemp.roundToInt()}°C",
+            theTemp = theTemp.roundToInt().toString(),
             icon = "$IMAGE_BASE_URL$weatherStateAbbr.png",
             weatherStateName = weatherStateName,
             city = currentCity

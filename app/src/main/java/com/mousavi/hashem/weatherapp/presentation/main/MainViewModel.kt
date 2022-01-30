@@ -18,23 +18,17 @@ class MainViewModel @Inject constructor(
     private val dispatcher: CoroutineDispatcher
 ): ViewModel() {
 
-    private var _loading = MutableStateFlow(false)
-    val loading = _loading.asStateFlow()
-
-    private var _weather = MutableStateFlow(Weather.Default)
-    val weather = _weather.asStateFlow()
-
-    private var _error = MutableStateFlow("")
-    val error = _error.asStateFlow()
+    private var _weatherState = MutableStateFlow(WeatherState())
+    val weatherState = _weatherState
 
     fun getTomorrowWeather() {
         viewModelScope.launch(dispatcher) {
-            _loading.value = true
+            _weatherState.value = weatherState.value.copy(loading = true)
             val result = getTomorrowWeatherUseCase()
-            _loading.value = false
+            _weatherState.value = weatherState.value.copy(loading = false)
             when (result) {
                 is Either.Success -> {
-                    _weather.value = result.data
+                    _weatherState.value = weatherState.value.copy(weather = result.data)
                 }
                 is Either.Error -> {
 

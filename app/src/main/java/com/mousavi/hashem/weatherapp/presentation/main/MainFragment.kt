@@ -15,6 +15,8 @@ import com.mousavi.hashem.weatherapp.data.local.Preferences
 import com.mousavi.hashem.weatherapp.databinding.FragmentMainBinding
 import com.mousavi.hashem.weatherapp.domain.entity.Weather
 import com.mousavi.hashem.weatherapp.presentation.BaseFragment
+import com.mousavi.hashem.weatherapp.util.dateFormat
+import com.mousavi.hashem.weatherapp.util.showGone
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
@@ -55,14 +57,16 @@ class MainFragment : BaseFragment(), SharedPreferences.OnSharedPreferenceChangeL
 
     private fun observers() {
         lifecycleScope.launchWhenStarted {
-            viewModel.weather.collectLatest { weather ->
-                showData(weather)
+            viewModel.weatherState.collectLatest { state ->
+                binding.loading.root.showGone(state.loading)
+                showData(state.weather)
             }
         }
     }
 
     private fun showData(weather: Weather) {
         with(weather) {
+            binding.tvDate.text = dateFormat(applicableDate)
             binding.ivIcon.load(icon)
             binding.tvCityName.text = city
             binding.tvTemp.text = theTemp
