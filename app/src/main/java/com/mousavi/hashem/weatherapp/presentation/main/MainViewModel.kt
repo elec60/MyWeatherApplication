@@ -21,6 +21,10 @@ class MainViewModel @Inject constructor(
     private var _weatherState = MutableStateFlow(WeatherState())
     val weatherState = _weatherState
 
+    init {
+        getTomorrowWeather()
+    }
+
     fun getTomorrowWeather() {
         viewModelScope.launch(dispatcher) {
             _weatherState.value = weatherState.value.copy(loading = true)

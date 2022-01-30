@@ -28,11 +28,6 @@ class MainFragment : BaseFragment(), SharedPreferences.OnSharedPreferenceChangeL
 
     private val viewModel: MainViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.getTomorrowWeather()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -77,7 +72,9 @@ class MainFragment : BaseFragment(), SharedPreferences.OnSharedPreferenceChangeL
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        viewModel.getTomorrowWeather()
+        if (key == Preferences.KEY_CITY_NAME) {
+            viewModel.getTomorrowWeather()
+        }
     }
 
     override fun onStart() {
