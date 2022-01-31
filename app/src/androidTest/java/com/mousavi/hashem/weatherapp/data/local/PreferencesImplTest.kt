@@ -8,6 +8,7 @@ import com.google.common.truth.Truth.assertThat
 import com.mousavi.hashem.weatherapp.R
 import com.mousavi.hashem.weatherapp.data.StringProvider
 import kotlinx.coroutines.runBlocking
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
@@ -19,11 +20,13 @@ class PreferencesImplTest {
     private lateinit var preferences: Preferences
     private lateinit var stringProvider: StringProvider
 
+    private var sharedPrefName = "test_shared_pref_name"
+
 
     @Before
     fun setUp() {
         context = InstrumentationRegistry.getInstrumentation().targetContext
-        sharedPreferences = context.getSharedPreferences("name", Context.MODE_PRIVATE)
+        sharedPreferences = context.getSharedPreferences(sharedPrefName, Context.MODE_PRIVATE)
         stringProvider = Mockito.mock(StringProvider::class.java)
         preferences = PreferencesImpl(sharedPreferences, stringProvider)
     }
@@ -44,7 +47,6 @@ class PreferencesImplTest {
     fun test_getCurrentCity_when_default_value_used() = runBlocking<Unit> {
         Mockito.`when`(stringProvider.getStringArray(R.array.cities))
             .thenReturn(arrayOf("city1", "city2"))
-        sharedPreferences.edit().putString(Preferences.KEY_CITY_NAME, null).commit()
         val currentCity = preferences.getCurrentCity()
 
         assertThat(currentCity).isEqualTo("city1")
@@ -59,5 +61,10 @@ class PreferencesImplTest {
 
         assertThat(preferences.getCurrentCity()).isEqualTo("Tehran")
 
+    }
+
+    @After
+    fun tearDown() {
+        sharedPreferences.edit().clear().commit()
     }
 }
