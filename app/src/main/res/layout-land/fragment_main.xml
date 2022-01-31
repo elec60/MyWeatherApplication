@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
+        android:background="?selectableItemBackground"
         android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -111,6 +112,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/tv_max_temp"
         app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
