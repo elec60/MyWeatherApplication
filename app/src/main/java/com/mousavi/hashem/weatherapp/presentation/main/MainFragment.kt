@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -28,6 +29,13 @@ class MainFragment : BaseFragment(), SharedPreferences.OnSharedPreferenceChangeL
 
     private val viewModel: MainViewModel by viewModels()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        activity?.getSharedPreferences(Preferences.NAME_OF_SHARED_PREF, Context.MODE_PRIVATE)
+            ?.registerOnSharedPreferenceChangeListener(this)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,7 +56,7 @@ class MainFragment : BaseFragment(), SharedPreferences.OnSharedPreferenceChangeL
             findNavController().navigate(R.id.action_mainFragment_to_citiesFragment)
         }
 
-        binding.tvCityName.setOnClickListener{
+        binding.tvCityName.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_citiesFragment)
         }
 
@@ -61,9 +69,31 @@ class MainFragment : BaseFragment(), SharedPreferences.OnSharedPreferenceChangeL
                 showData(state.weather)
             }
         }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.error.collectLatest {
+                checkError(error = it)
+                viewModel.resetError()
+            }
+        }
+    }
+
+    private fun checkError(error: String) {
+        if (error.isNotBlank()) {
+            AlertDialog.Builder(context ?: return)
+                .setCancelable(false)
+                .setMessage(error)
+                .setPositiveButton(getString(R.string.retry)) { _, _ ->
+                    viewModel.getTomorrowWeather()
+                }
+                .setNeutralButton(getString(R.string.exit)) { _, _ ->
+                    activity?.finish()
+                }.show()
+        }
     }
 
     private fun showData(weather: Weather) {
+        if (weather == Weather.Default) return
         with(weather) {
             binding.tvDate.text = dateFormat(applicableDate)
             binding.ivIcon.load(icon)
@@ -81,17 +111,10 @@ class MainFragment : BaseFragment(), SharedPreferences.OnSharedPreferenceChangeL
         }
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onDestroy() {
+        super.onDestroy()
         activity?.getSharedPreferences(Preferences.NAME_OF_SHARED_PREF, Context.MODE_PRIVATE)
-            ?.registerOnSharedPreferenceChangeListener(this)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        activity?.getSharedPreferences(Preferences.NAME_OF_SHARED_PREF, Context.MODE_PRIVATE)
-            ?.registerOnSharedPreferenceChangeListener(this)
-
+            ?.unregisterOnSharedPreferenceChangeListener(this)
     }
 
     override fun onDestroyView() {

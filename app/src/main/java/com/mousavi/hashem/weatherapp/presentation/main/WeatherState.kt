@@ -4,6 +4,5 @@ import com.mousavi.hashem.weatherapp.domain.entity.Weather
 
 data class WeatherState(
     val loading: Boolean = false,
-    val weather: Weather = Weather.Default,
-    val error: String = "",
+    val weather: Weather = Weather.Default
 )

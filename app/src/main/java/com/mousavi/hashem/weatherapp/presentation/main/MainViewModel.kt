@@ -3,7 +3,6 @@ package com.mousavi.hashem.weatherapp.presentation.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mousavi.hashem.weatherapp.common.Either
-import com.mousavi.hashem.weatherapp.domain.entity.Weather
 import com.mousavi.hashem.weatherapp.domain.usecase.GetTomorrowWeatherUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -15,11 +14,14 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getTomorrowWeatherUseCase: GetTomorrowWeatherUseCase,
-    private val dispatcher: CoroutineDispatcher
-): ViewModel() {
+    private val dispatcher: CoroutineDispatcher,
+) : ViewModel() {
 
     private var _weatherState = MutableStateFlow(WeatherState())
-    val weatherState = _weatherState
+    val weatherState = _weatherState.asStateFlow()
+
+    private var _error = MutableStateFlow("")
+    val error = _error.asStateFlow()
 
     init {
         getTomorrowWeather()
@@ -35,10 +37,14 @@ class MainViewModel @Inject constructor(
                     _weatherState.value = weatherState.value.copy(weather = result.data)
                 }
                 is Either.Error -> {
-
+                    _error.value = result.error
                 }
             }
 
         }
+    }
+
+    fun resetError() {
+         _error.value = ""
     }
 }
