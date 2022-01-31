@@ -1,8 +1,6 @@
 package com.mousavi.hashem.weatherapp.domain.usecase
 
-import com.mousavi.hashem.weatherapp.R
 import com.mousavi.hashem.weatherapp.common.Either
-import com.mousavi.hashem.weatherapp.data.StringProvider
 import com.mousavi.hashem.weatherapp.domain.entity.Weather
 import com.mousavi.hashem.weatherapp.domain.repository.WeatherRepository
 import java.util.*
@@ -10,7 +8,7 @@ import javax.inject.Inject
 
 class GetTomorrowWeatherUseCaseImpl @Inject constructor(
     private val repository: WeatherRepository,
-    private val stringProvider: StringProvider,
+    private val getLocationDataUseCase: GetLocationDataUseCase,
 ) : GetTomorrowWeatherUseCase {
 
     private val calendar = Calendar.getInstance()
@@ -18,13 +16,10 @@ class GetTomorrowWeatherUseCaseImpl @Inject constructor(
 
     override suspend fun invoke(): Either<Weather, String> {
         calendar.timeInMillis = System.currentTimeMillis() + dayMillis
-        when (val locationData = repository.getLocationData()) {
+        when (val locationData = getLocationDataUseCase()) {
             is Either.Success -> {
-                if (locationData.data.isEmpty()) {
-                    return Either.Error(stringProvider.getString(R.string.no_data_for_this_city))
-                }
                 val weatherDataByDate = repository.getWeatherDataByDate(
-                    whereOnEarthID = locationData.data[0].whereOnEarthID,
+                    whereOnEarthID = locationData.data,
                     year = calendar.get(Calendar.YEAR),
                     month = calendar.get(Calendar.MONTH) + 1, //as month is zero index
                     day = calendar.get(Calendar.DAY_OF_MONTH)

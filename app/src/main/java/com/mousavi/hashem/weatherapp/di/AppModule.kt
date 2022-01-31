@@ -15,10 +15,7 @@ import com.mousavi.hashem.weatherapp.data.remote.NetworkDataSource
 import com.mousavi.hashem.weatherapp.data.remote.NetworkDataSourceImpl
 import com.mousavi.hashem.weatherapp.data.repository.WeatherRepositoryImpl
 import com.mousavi.hashem.weatherapp.domain.repository.WeatherRepository
-import com.mousavi.hashem.weatherapp.domain.usecase.GetTomorrowWeatherUseCase
-import com.mousavi.hashem.weatherapp.domain.usecase.GetTomorrowWeatherUseCaseImpl
-import com.mousavi.hashem.weatherapp.domain.usecase.SetCityUseCase
-import com.mousavi.hashem.weatherapp.domain.usecase.SetCityUseCaseImpl
+import com.mousavi.hashem.weatherapp.domain.usecase.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -104,6 +101,11 @@ object AppModule {
 
     @Provides
     fun provideSetCityUseCase(useCase: SetCityUseCaseImpl): SetCityUseCase {
+        return useCase
+    }
+
+    @Provides
+    fun provideGetLocationDataUseCaseCase(useCase: GetLocationDataUseCaseCaseImpl): GetLocationDataUseCase {
         return useCase
     }
 
