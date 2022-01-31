@@ -49,6 +49,13 @@ class CitiesFragment : BaseFragment() {
         binding.recycler.adapter = adapter
         observers()
         startAnimation()
+        listeners()
+    }
+
+    private fun listeners() {
+        binding.btnBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun startAnimation() {
